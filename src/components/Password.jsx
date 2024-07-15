@@ -12,21 +12,21 @@ const Password = ({ value, onChange, placeholder }) => {
       <input
         value={value}
         onChange={onChange}
-        type={isShowPassword ? "text" : "passowrd"}
+        type={isShowPassword ? "text" : "password"}
         placeholder={placeholder || "Password"}
-        className="w-full text-sm bg-transparent py-3 mr-3 rounded outline-none"
+        className="w-full py-3 mr-3 text-sm bg-transparent rounded outline-none"
       ></input>
 
       {isShowPassword ? (
         <FaRegEye
           size={22}
-          className="text-primary cursor-pointer"
+          className="cursor-pointer text-primary"
           onClick={() => toggleShowPassword()}
         />
       ) : (
         <FaRegEyeSlash
           size={22}
-          className="text-slate-400 cursor-pointer"
+          className="cursor-pointer text-slate-400"
           onClick={() => toggleShowPassword()}
         />
       )}
