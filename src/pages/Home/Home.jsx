@@ -9,6 +9,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import Toast from "../../components/Toast";
 import EmptyCard from "../../components/EmptyCard";
 import AddNotesImg from "../../assets/images/add-note.svg";
+import NoNoteImg from "../../assets/images/no-note.svg";
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -25,6 +26,8 @@ const Home = () => {
 
   const [allNotes, setAllNotes] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+
+  const [isSearch, setIsSearch] = useState(false);
 
   const navigate = useNavigate();
 
@@ -75,7 +78,7 @@ const Home = () => {
   };
 
   const deleteNote = async (data) => {
-    const noteId = noteData._id;
+    const noteId = data._id;
     try {
       const response = await axiosInstance.delete("/delete-note/" + noteId);
 
@@ -94,6 +97,45 @@ const Home = () => {
     }
   };
 
+  const onSearchNote = async (query) => {
+    try {
+      const response = await axiosInstance.get("/search-notes", {
+        params: { query },
+      });
+
+      if (response.data && response.data.notes) {
+        setIsSearch(true);
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateIsPinned = async (data) => {
+    const noteId = data._id;
+    try {
+      const response = await axiosInstance.put(
+        "/update-note-pinned/" + noteId,
+        {
+          isPinned: !data.isPinned,
+        }
+      );
+
+      if (response.data && response.data.note) {
+        showToastMessage("Note Updated Successfully");
+        getAllNotes();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setIsSearch(false);
+    getAllNotes();
+  };
+
   useEffect(() => {
     getAllNotes();
     getUserInfo();
@@ -102,7 +144,11 @@ const Home = () => {
 
   return (
     <>
-      <Navbar userInfo={userInfo} />
+      <Navbar
+        userInfo={userInfo}
+        onSearchNote={onSearchNote}
+        handleClearSearch={handleClearSearch}
+      />
 
       <div className="container mx-auto">
         {allNotes.length > 0 ? (
@@ -117,14 +163,18 @@ const Home = () => {
                 isPinned={item.isPinned}
                 onEdit={() => handleEdit(item)}
                 onDelete={() => deleteNote(item)}
-                onPinNote={() => {}}
+                onPinNote={() => updateIsPinned(item)}
               />
             ))}
           </div>
         ) : (
           <EmptyCard
-            imgSrc={AddNotesImg}
-            message={`Start creating your first note! Click the 'Add' button to jot down your thoughts, ideas, and reminders. Let's get started!`}
+            imgSrc={isSearch ? NoNoteImg : AddNotesImg}
+            message={
+              isSearch
+                ? `Oops! No notes found matching your search.`
+                : `Start creating your first note! Click the 'Add' button to jot down your thoughts, ideas, and reminders. Let's get started!`
+            }
           />
         )}
       </div>
