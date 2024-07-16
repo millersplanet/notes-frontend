@@ -2,7 +2,16 @@ import React from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 
-const SearchBar = ({ value, onChange, handleSearch, onClearSearch }) => {
+const SearchBar = ({
+  userInfo,
+  value,
+  onChange,
+  handleSearch,
+  onClearSearch,
+}) => {
+  if (!userInfo) {
+    return <div className="invisible px-4 w-80"></div>;
+  }
   return (
     <div className="flex items-center px-4 rounded-md w-80 bg-slate-100">
       <input

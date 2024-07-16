@@ -3,7 +3,7 @@ import { getInitials } from "../utils/helper";
 
 const ProfileInfo = ({ userInfo, onLogout }) => {
   if (!userInfo) {
-    return null;
+    return <div className="invisible"></div>;
   }
   return (
     <div className="flex items-center gap-3">

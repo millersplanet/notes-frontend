@@ -32,6 +32,7 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
         }}
         handleSearch={handleSearch}
         onClearSearch={onClearSearch}
+        userInfo={userInfo}
       />
 
       <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
